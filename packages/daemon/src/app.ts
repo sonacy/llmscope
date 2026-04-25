@@ -6,6 +6,7 @@ import { bearerAuth } from './auth';
 import { EventsRepo } from './db/events-repo';
 import { SourcesRepo } from './db/sources-repo';
 import { ingestRoute } from './routes/ingest';
+import { eventsListRoute } from './routes/events-list';
 import type { Broadcaster } from './broadcaster';
 import { StubBroadcaster } from './broadcaster';
 
@@ -52,6 +53,7 @@ export function createApp(deps: AppDeps): Hono {
   });
 
   app.route('/api/ingest', ingestRoute({ events, sources, broadcaster, bodyCapBytes: deps.config.bodyCapBytes }));
+  app.route('/api/events', eventsListRoute(events));
 
   app.notFound((c) => c.json({ error: 'not found' }, 404));
 
