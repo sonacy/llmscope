@@ -13,6 +13,8 @@ import { StatsRepo } from './db/stats-repo';
 import { replayRoute } from './routes/replay';
 import { ReplaysRepo } from './db/replays-repo';
 import { sourcesRoute } from './routes/sources';
+import { bootstrapRoute } from './routes/bootstrap';
+import { corsMiddleware } from './middleware/cors';
 import type { Broadcaster } from './broadcaster';
 import { StubBroadcaster } from './broadcaster';
 
@@ -31,6 +33,7 @@ export function createApp(deps: AppDeps): Hono {
   const sources = new SourcesRepo(deps.db);
   const broadcaster = deps.broadcaster ?? new StubBroadcaster();
 
+  app.use('/api/*', corsMiddleware());
   app.use(
     '/api/*',
     bearerAuth({
@@ -76,6 +79,10 @@ export function createApp(deps: AppDeps): Hono {
   );
 
   app.route('/api/sources', sourcesRoute({ db: deps.db, events, sources, broadcaster }));
+  app.route(
+    '/api/_bootstrap',
+    bootstrapRoute({ port: deps.config.port, token: deps.token, version: '0.0.0' }),
+  );
 
   app.notFound((c) => c.json({ error: 'not found' }, 404));
 
