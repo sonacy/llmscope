@@ -2,9 +2,17 @@ import { describe, it, expect } from 'bun:test';
 import { mkdtempSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { Database } from 'bun:sqlite';
 import { ensureToken, rotateToken } from '../src/auth';
 import { createApp } from '../src/app';
 import { loadConfig } from '../src/config';
+import { migrate } from '../src/db/migrate';
+
+function memDb() {
+  const db = new Database(':memory:');
+  migrate(db);
+  return db;
+}
 
 describe('ensureToken', () => {
   it('creates a token file with mode 0600', () => {
@@ -37,7 +45,7 @@ describe('ensureToken', () => {
 describe('bearerAuth middleware', () => {
   const cfg = loadConfig({});
   const token = 'tok-' + 'a'.repeat(32);
-  const app = createApp({ config: cfg, startedAt: Date.now(), token });
+  const app = createApp({ config: cfg, startedAt: Date.now(), token, db: memDb() });
 
   it('rejects /api/* without bearer', async () => {
     const res = await app.request('/api/events');

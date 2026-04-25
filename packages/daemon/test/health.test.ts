@@ -1,10 +1,18 @@
 import { describe, it, expect } from 'bun:test';
+import { Database } from 'bun:sqlite';
 import { createApp } from '../src/app';
 import { loadConfig } from '../src/config';
+import { migrate } from '../src/db/migrate';
+
+function memDb() {
+  const db = new Database(':memory:');
+  migrate(db);
+  return db;
+}
 
 describe('GET /api/health', () => {
   it('returns ok with version and uptime', async () => {
-    const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't' });
+    const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't', db: memDb() });
     const res = await app.request('/api/health');
     expect(res.status).toBe(200);
     const json = (await res.json()) as { ok: boolean; version: string; uptime_ms: number };
@@ -14,7 +22,7 @@ describe('GET /api/health', () => {
   });
 
   it('returns 404 for unknown non-/api routes', async () => {
-    const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't' });
+    const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't', db: memDb() });
     const res = await app.request('/nope');
     expect(res.status).toBe(404);
   });
