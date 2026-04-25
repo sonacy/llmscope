@@ -4,12 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo 'ui build placeholder — wired up in step 39'",
-    "dev": "echo 'ui dev placeholder — wired up in step 39'",
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "bun test"
   },
   "dependencies": {
-    "@llmscope/core": "workspace:*"
+    "@llmscope/core": "workspace:*",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
   }
 }

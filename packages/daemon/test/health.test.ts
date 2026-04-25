@@ -21,9 +21,9 @@ describe('GET /api/health', () => {
     expect(json.uptime_ms).toBeGreaterThanOrEqual(0);
   });
 
-  it('returns 404 for unknown non-/api routes', async () => {
+  it('returns 404 for unknown /api routes', async () => {
     const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't', db: memDb() });
-    const res = await app.request('/nope');
+    const res = await app.request('/api/no-such-route', { headers: { authorization: 'Bearer t' } });
     expect(res.status).toBe(404);
   });
 });

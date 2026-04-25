@@ -14,7 +14,11 @@ import { replayRoute } from './routes/replay';
 import { ReplaysRepo } from './db/replays-repo';
 import { sourcesRoute } from './routes/sources';
 import { bootstrapRoute } from './routes/bootstrap';
+import { staticRoute } from './routes/static';
 import { corsMiddleware } from './middleware/cors';
+import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { Broadcaster } from './broadcaster';
 import { StubBroadcaster } from './broadcaster';
 
@@ -83,6 +87,15 @@ export function createApp(deps: AppDeps): Hono {
     '/api/_bootstrap',
     bootstrapRoute({ port: deps.config.port, token: deps.token, version: '0.0.0' }),
   );
+
+  // Static SPA at "/" — only mounted if the build output exists. The
+  // daemon's bun:sqlite-based unit tests run without a built UI; in that
+  // case any non-/api route returns the 404 below.
+  const here = dirname(fileURLToPath(import.meta.url));
+  const publicDir = process.env.LLMSCOPE_PUBLIC_DIR ?? join(here, '..', 'public');
+  if (existsSync(publicDir)) {
+    app.route('/', staticRoute(publicDir));
+  }
 
   app.notFound((c) => c.json({ error: 'not found' }, 404));
 
