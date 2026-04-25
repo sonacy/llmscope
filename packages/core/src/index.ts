@@ -5,3 +5,4 @@ export * from './pricing.ts';
 export * from './registry.ts';
 export * from './fingerprints.ts';
 export * from './sse.ts';
+export * from './ws.ts';
