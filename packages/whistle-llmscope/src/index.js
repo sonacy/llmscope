@@ -45,10 +45,35 @@ const STRIP_OUTBOUND = new Set([
   'x-forwarded-from-whistle',
 ]);
 
+// Whistle's `server` hook receives requests as plain HTTP (TLS already
+// terminated upstream). Whistle does NOT pass x-whistle-https-request on
+// this hook — only on pipe hooks. Since all LLM APIs we care about are
+// HTTPS-only, infer HTTPS from the host for known providers.
+const KNOWN_HTTPS_HOSTS = [
+  /(^|\.)api\.openai\.com$/i,
+  /(^|\.)oai\.azure\.com$/i,
+  /(^|\.)api\.anthropic\.com$/i,
+  /(^|\.)generativelanguage\.googleapis\.com$/i,
+  /(^|\.)bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com$/i,
+  /(^|\.)api\.cohere\.(com|ai)$/i,
+  /(^|\.)api\.mistral\.ai$/i,
+  /(^|\.)api\.together\.(xyz|ai)$/i,
+  /(^|\.)api\.groq\.com$/i,
+  /(^|\.)openrouter\.ai$/i,
+  /(^|\.)api2\.cursor\.sh$/i,
+];
+
+function isLikelyHttps(host, headers) {
+  if (headers && headers[HTTPS_HEADER]) return true;
+  if (!host) return false;
+  return KNOWN_HTTPS_HOSTS.some((re) => re.test(host));
+}
+
 function reconstructUrl(req) {
   const host = req.headers.host;
   if (!host) return null;
-  const isHttps = !!req.headers[HTTPS_HEADER];
+  const bareHost = host.split(':')[0];
+  const isHttps = isLikelyHttps(bareHost, req.headers);
   return `${isHttps ? 'https' : 'http'}://${host}${req.url || '/'}`;
 }
 
@@ -80,6 +105,7 @@ module.exports.server = function (httpServer /*, options */) {
       hostHeader: clientReq.headers.host,
       hook: clientReq.headers[HOOK_HEADER],
       httpsFlag: clientReq.headers[HTTPS_HEADER],
+      headerNames: Object.keys(clientReq.headers),
     });
 
     if (!fullUrl) {
