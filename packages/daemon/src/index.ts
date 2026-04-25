@@ -6,9 +6,14 @@ import { openDb } from './db/connect';
 import { migrate } from './db/migrate';
 import { HubBroadcaster } from './broadcaster';
 import { createStreamHandlers } from './stream';
+import { takePidFile, installShutdownHandlers } from './lifecycle';
+import { openLogger } from './log';
+import { startEvictionTicker } from './eviction';
 
 const config = loadConfig();
 mkdirSync(config.homeDir, { recursive: true });
+const logger = openLogger(config.logPath);
+takePidFile(config.pidPath);
 const token = ensureToken(config.tokenPath);
 const db = openDb(config.dbPath);
 migrate(db);
@@ -29,5 +34,18 @@ const server = Bun.serve({
   websocket: stream.websocket,
 });
 
+const evictionTicker = startEvictionTicker({ db, dbPath: config.dbPath, capBytes: config.dbCapBytes, broadcaster, log: (m) => logger.info(m) });
+
+installShutdownHandlers({
+  pidPath: config.pidPath,
+  closeServer: () => server.stop(true),
+  closeDb: () => {
+    evictionTicker.stop();
+    db.close();
+  },
+  closeLogger: () => logger.close(),
+});
+
+logger.info('daemon started', { port: server.port, host: server.hostname });
 console.log(`llmscope daemon listening on http://${server.hostname}:${server.port}`);
 console.log(`token at: ${config.tokenPath}`);
