@@ -1,0 +1,13 @@
+{
+  "ts_start": 1714032000000,
+  "ts_end": 1714032001500,
+  "transport": "sse",
+  "method": "POST",
+  "url": "https://api.openai.com/v1/chat/completions",
+  "request_headers": { "user-agent": "OpenAI/Codex-CLI 0.5", "content-type": "application/json" },
+  "request_body": "{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"refactor my code\"}],\"stream\":true}",
+  "status": 200,
+  "response_headers": { "content-type": "text/event-stream" },
+  "response_body": "data: {\"choices\":[{\"delta\":{\"content\":\"sure\"}}]}\n\ndata: {\"choices\":[{\"delta\":{},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":4,\"completion_tokens\":1,\"total_tokens\":5}}\n\ndata: [DONE]\n\n",
+  "reassembled": { "chunks": 3, "usage": { "prompt_tokens": 4, "completion_tokens": 1, "total_tokens": 5 } }
+}

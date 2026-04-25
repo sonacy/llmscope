@@ -1,0 +1,322 @@
+{
+  "version": "1.0",
+  "feature": "llmscope",
+  "slug": "llmscope",
+  "branch": "feat/llmscope",
+  "branch_type": "feat",
+  "phase": "debug",
+  "plan_dir": ".claude/plans/2026-04-24-llmscope",
+  "created_at": "2026-04-25T04:31:28Z",
+  "updated_at": "2026-04-25T06:51:50Z",
+  "plan_commit": "53b49bfb9d556370f3020fcd40b981fcbdc32dce",
+  "steps": [
+    {
+      "id": 1,
+      "name": "Repo + Bun workspace skeleton",
+      "status": "done",
+      "commit": "aa3495a"
+    },
+    {
+      "id": 2,
+      "name": "`core` \u2014 IngestEvent Zod schema + types",
+      "status": "done",
+      "commit": "ea2fe88"
+    },
+    {
+      "id": 3,
+      "name": "`core` \u2014 ULID helper",
+      "status": "done",
+      "commit": "7eb3920"
+    },
+    {
+      "id": 4,
+      "name": "`core` \u2014 header masking helpers",
+      "status": "done",
+      "commit": "47052c1"
+    },
+    {
+      "id": 5,
+      "name": "`core` \u2014 pricing JSON snapshot + lookup",
+      "status": "done",
+      "commit": "4a202bc"
+    },
+    {
+      "id": 6,
+      "name": "`core` \u2014 provider registry + host detection",
+      "status": "done",
+      "commit": "ab191ec"
+    },
+    {
+      "id": 7,
+      "name": "`core` \u2014 built-in fingerprint table + attribution engine",
+      "status": "done",
+      "commit": "ea25a5e"
+    },
+    {
+      "id": 8,
+      "name": "`core` \u2014 SSE reassembly (OpenAI + Anthropic + Gemini)",
+      "status": "done",
+      "commit": "6843b1a"
+    },
+    {
+      "id": 9,
+      "name": "`core` \u2014 WS reassembly (OpenAI Realtime)",
+      "status": "done",
+      "commit": "8aec143"
+    },
+    {
+      "id": 10,
+      "name": "`core` \u2014 body cap + truncation helper",
+      "status": "done",
+      "commit": "9d1dd0b"
+    },
+    {
+      "id": 11,
+      "name": "`core` \u2014 package build + barrel exports",
+      "status": "done",
+      "commit": "22ccc5e"
+    },
+    {
+      "id": 12,
+      "name": "`daemon` \u2014 Hono skeleton, 127.0.0.1 bind, health endpoint",
+      "status": "done",
+      "commit": "5e1751d"
+    },
+    {
+      "id": 13,
+      "name": "`daemon` \u2014 bearer token generation + auth middleware",
+      "status": "done",
+      "commit": "3a5838b"
+    },
+    {
+      "id": 14,
+      "name": "`daemon` \u2014 SQLite migrations runner + schema 0001",
+      "status": "done",
+      "commit": "888acb4"
+    },
+    {
+      "id": 15,
+      "name": "`daemon` \u2014 event repository (insert + read + filters)",
+      "status": "done",
+      "commit": "5c2601b"
+    },
+    {
+      "id": 16,
+      "name": "`daemon` \u2014 ingest pipeline (without route): derive + persist",
+      "status": "done",
+      "commit": "bbf05e3"
+    },
+    {
+      "id": 17,
+      "name": "`daemon` \u2014 POST /api/ingest route + stub broadcaster",
+      "status": "done",
+      "commit": "42a8f7f"
+    },
+    {
+      "id": 18,
+      "name": "`whistle-llmscope` \u2014 minimal viable plugin (HTTP only)",
+      "status": "done",
+      "commit": "160ff87"
+    },
+    {
+      "id": 19,
+      "name": "`daemon` \u2014 GET /api/events list route",
+      "status": "done",
+      "commit": "4a2759f"
+    },
+    {
+      "id": 20,
+      "name": "`daemon` \u2014 GET /api/events/:id detail route",
+      "status": "done",
+      "commit": "b186ed6"
+    },
+    {
+      "id": 21,
+      "name": "`daemon` \u2014 GET /api/stats route",
+      "status": "done",
+      "commit": "5747422"
+    },
+    {
+      "id": 22,
+      "name": "`daemon` \u2014 WS /api/stream",
+      "status": "done",
+      "commit": "d70d83c"
+    },
+    {
+      "id": 23,
+      "name": "`daemon` \u2014 POST /api/events/:id/replay (read-only v1)",
+      "status": "done",
+      "commit": "963d3cd"
+    },
+    {
+      "id": 24,
+      "name": "`daemon` \u2014 POST/GET/DELETE /api/sources",
+      "status": "done",
+      "commit": "3472d68"
+    },
+    {
+      "id": 25,
+      "name": "`daemon` \u2014 GET /api/_bootstrap + CORS",
+      "status": "done",
+      "commit": "8b8ad94"
+    },
+    {
+      "id": 26,
+      "name": "`daemon` \u2014 eviction tick + body-cap acceptance",
+      "status": "done",
+      "commit": "3e79552"
+    },
+    {
+      "id": 27,
+      "name": "`daemon` \u2014 graceful shutdown + PID file + log writer",
+      "status": "done",
+      "commit": "265fd03"
+    },
+    {
+      "id": 28,
+      "name": "`cli` \u2014 Bun CLI skeleton (`commander`, `--help`, `--version`)",
+      "status": "done",
+      "commit": "2c6c780"
+    },
+    {
+      "id": 29,
+      "name": "`cli` \u2014 `start`/`stop`/`status` lifecycle commands",
+      "status": "done",
+      "commit": "d55dd9c"
+    },
+    {
+      "id": 30,
+      "name": "`cli` \u2014 `init` (host-proxy detection)",
+      "status": "done",
+      "commit": "bd44b92"
+    },
+    {
+      "id": 31,
+      "name": "`cli` \u2014 `install whistle`",
+      "status": "done",
+      "commit": "bd44b92"
+    },
+    {
+      "id": 32,
+      "name": "`cli` \u2014 `install mitmproxy`",
+      "status": "done",
+      "commit": "bd44b92"
+    },
+    {
+      "id": 33,
+      "name": "`cli` \u2014 `open` (default browser)",
+      "status": "done",
+      "commit": "bd44b92"
+    },
+    {
+      "id": 34,
+      "name": "`cli` \u2014 `export --format jsonl`",
+      "status": "done",
+      "commit": "bd44b92"
+    },
+    {
+      "id": 35,
+      "name": "`cli` \u2014 `rotate-token`",
+      "status": "done",
+      "commit": "bd44b92"
+    },
+    {
+      "id": 36,
+      "name": "`whistle-llmscope` \u2014 SSE reassembly",
+      "status": "done",
+      "commit": "bc45c01"
+    },
+    {
+      "id": 37,
+      "name": "`whistle-llmscope` \u2014 WebSocket capture (probe-first)",
+      "status": "done",
+      "commit": "f6f8e4d"
+    },
+    {
+      "id": 38,
+      "name": "`llmscope-mitmproxy` \u2014 single-file `addon.py` (HTTP + SSE + WS)",
+      "status": "done",
+      "commit": "8523d19"
+    },
+    {
+      "id": 39,
+      "name": "`ui` \u2014 Vite + React + Tailwind + shadcn scaffold; daemon serves `dist/`",
+      "status": "done",
+      "commit": "0616313"
+    },
+    {
+      "id": 40,
+      "name": "`ui` \u2014 list view (TanStack Table + filters + pagination)",
+      "status": "done",
+      "commit": "287c3ec"
+    },
+    {
+      "id": 41,
+      "name": "`ui` \u2014 detail view (request/response/headers/timeline)",
+      "status": "done",
+      "commit": "287c3ec"
+    },
+    {
+      "id": 42,
+      "name": "`ui` \u2014 charts on `/stats` (recharts)",
+      "status": "done",
+      "commit": "287c3ec"
+    },
+    {
+      "id": 43,
+      "name": "`ui` \u2014 replay button on detail view",
+      "status": "done",
+      "commit": "287c3ec"
+    },
+    {
+      "id": 44,
+      "name": "`ui` \u2014 manual source re-tagging UI",
+      "status": "done",
+      "commit": "287c3ec"
+    },
+    {
+      "id": 45,
+      "name": "`ui` \u2014 error pages, empty states, daemon-down banner",
+      "status": "done",
+      "commit": "287c3ec"
+    },
+    {
+      "id": 46,
+      "name": "End-to-end smoke test (fixture \u2192 ingest \u2192 list shows it)",
+      "status": "done",
+      "commit": "335ebeb"
+    },
+    {
+      "id": 47,
+      "name": "README + quickstart docs",
+      "status": "done",
+      "commit": "4683c17"
+    },
+    {
+      "id": 48,
+      "name": "CI (GitHub Actions)",
+      "status": "done",
+      "commit": "cb84874"
+    },
+    {
+      "id": 49,
+      "name": "Pre-1.0 polish \u2014 body-cap E2E, daemon crash recovery, perf check, invariant tests",
+      "status": "done",
+      "commit": "cb19bd2"
+    },
+    {
+      "id": 50,
+      "name": "Release & publish flow",
+      "status": "done",
+      "commit": "efd842b"
+    }
+  ],
+  "debug_log": [
+    {
+      "description": "whistle-client testing process is too complex and undocumented; users repeat the same diagnostic loop on every fresh setup",
+      "root_cause": "no end-to-end testing guide for the whistle-client + lack + plugin + CA + Node-env-vars chain (8 distinct setup steps with non-obvious failure modes)",
+      "commit": "b1d251b",
+      "fixed_at": "2026-04-25T06:51:50Z"
+    }
+  ]
+}

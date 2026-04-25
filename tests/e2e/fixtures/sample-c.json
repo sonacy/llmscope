@@ -1,0 +1,12 @@
+{
+  "ts_start": 1714032020000,
+  "ts_end": 1714032022500,
+  "transport": "ws",
+  "method": "GET",
+  "url": "https://api.openai.com/v1/realtime",
+  "request_headers": { "user-agent": "OpenAI/Codex-CLI 0.5" },
+  "request_body": "{\"timeline\":[{\"direction\":\"client\",\"ts\":1,\"text\":\"{\\\"type\\\":\\\"response.create\\\"}\"},{\"direction\":\"server\",\"ts\":2,\"text\":\"{\\\"type\\\":\\\"response.text.delta\\\",\\\"delta\\\":\\\"hi\\\"}\"}]}",
+  "status": 101,
+  "response_headers": {},
+  "response_body": null
+}

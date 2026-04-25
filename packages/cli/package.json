@@ -1,0 +1,19 @@
+{
+  "name": "@llmscope/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "bin": {
+    "llmscope": "./src/bin.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@llmscope/core": "workspace:*",
+    "commander": "^14.0.3"
+  }
+}

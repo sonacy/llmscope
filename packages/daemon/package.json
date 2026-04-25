@@ -1,0 +1,19 @@
+{
+  "name": "@llmscope/daemon",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "dev": "bun --hot src/index.ts",
+    "start": "bun src/index.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@llmscope/core": "workspace:*",
+    "hono": "^4.12.15",
+    "zod": "^4.3.6"
+  }
+}

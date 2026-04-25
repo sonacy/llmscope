@@ -1,0 +1,24 @@
+{
+  "name": "whistle.llmscope",
+  "version": "0.0.0",
+  "description": "whistle plugin: capture LLM API traffic and forward to llmscope daemon",
+  "main": "./src/index.js",
+  "scripts": {
+    "typecheck": "echo 'whistle plugin is JS — no typecheck'",
+    "test": "bun test"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "whistle",
+    "whistle-plugin",
+    "llm",
+    "openai",
+    "anthropic",
+    "claude",
+    "llmscope"
+  ],
+  "license": "MIT"
+}
