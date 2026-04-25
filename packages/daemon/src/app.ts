@@ -10,6 +10,8 @@ import { eventsListRoute } from './routes/events-list';
 import { eventDetailRoute } from './routes/event-detail';
 import { statsRoute } from './routes/stats';
 import { StatsRepo } from './db/stats-repo';
+import { replayRoute } from './routes/replay';
+import { ReplaysRepo } from './db/replays-repo';
 import type { Broadcaster } from './broadcaster';
 import { StubBroadcaster } from './broadcaster';
 
@@ -19,6 +21,7 @@ export interface AppDeps {
   token: string;
   db: Database;
   broadcaster?: Broadcaster;
+  fetchImpl?: typeof fetch;
 }
 
 export function createApp(deps: AppDeps): Hono {
@@ -59,6 +62,17 @@ export function createApp(deps: AppDeps): Hono {
   app.route('/api/events', eventsListRoute(events));
   app.route('/api/events', eventDetailRoute(events));
   app.route('/api/stats', statsRoute(new StatsRepo(deps.db)));
+  app.route(
+    '/api/events',
+    replayRoute({
+      events,
+      sources,
+      replays: new ReplaysRepo(deps.db),
+      broadcaster,
+      bodyCapBytes: deps.config.bodyCapBytes,
+      fetchImpl: deps.fetchImpl,
+    }),
+  );
 
   app.notFound((c) => c.json({ error: 'not found' }, 404));
 

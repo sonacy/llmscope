@@ -151,4 +151,14 @@ export class EventsRepo {
       .get(tsMs);
     return r?.c ?? 0;
   }
+
+  setParent(id: string, parentId: string): void {
+    this.db.prepare('UPDATE events SET parent_id = ? WHERE id = ?').run(parentId, id);
+  }
+
+  updateSource(id: string, kind: string, label: string, confidence: number): void {
+    this.db
+      .prepare('UPDATE events SET source_kind = ?, source_label = ?, source_confidence = ? WHERE id = ?')
+      .run(kind, label, confidence, id);
+  }
 }
