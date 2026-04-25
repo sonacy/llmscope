@@ -1,13 +1,23 @@
 import { Hono } from 'hono';
 import type { Config } from './config';
+import { bearerAuth } from './auth';
 
 export interface AppDeps {
   config: Config;
   startedAt: number;
+  token: string;
 }
 
 export function createApp(deps: AppDeps): Hono {
   const app = new Hono();
+
+  app.use(
+    '/api/*',
+    bearerAuth({
+      expected: () => deps.token,
+      bypass: (p) => p === '/api/health' || p === '/api/_bootstrap',
+    }),
+  );
 
   app.get('/api/health', (c) => {
     return c.json({

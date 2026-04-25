@@ -4,7 +4,7 @@ import { loadConfig } from '../src/config';
 
 describe('GET /api/health', () => {
   it('returns ok with version and uptime', async () => {
-    const app = createApp({ config: loadConfig({}), startedAt: Date.now() });
+    const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't' });
     const res = await app.request('/api/health');
     expect(res.status).toBe(200);
     const json = (await res.json()) as { ok: boolean; version: string; uptime_ms: number };
@@ -13,9 +13,9 @@ describe('GET /api/health', () => {
     expect(json.uptime_ms).toBeGreaterThanOrEqual(0);
   });
 
-  it('returns 404 for unknown routes', async () => {
-    const app = createApp({ config: loadConfig({}), startedAt: Date.now() });
-    const res = await app.request('/api/nope');
+  it('returns 404 for unknown non-/api routes', async () => {
+    const app = createApp({ config: loadConfig({}), startedAt: Date.now(), token: 't' });
+    const res = await app.request('/nope');
     expect(res.status).toBe(404);
   });
 });
