@@ -1,4 +1,4 @@
-import type { Provider } from './event.ts';
+import type { Provider } from './event';
 
 export interface ProviderRule {
   provider: Provider;

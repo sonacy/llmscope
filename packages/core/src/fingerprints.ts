@@ -1,4 +1,4 @@
-import type { Source, Headers } from './event.ts';
+import type { Source, Headers } from './event';
 
 export type MatchType = 'ua_exact' | 'ua_prefix' | 'ua_regex' | 'host' | 'shape';
 

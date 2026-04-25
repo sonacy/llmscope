@@ -1,4 +1,4 @@
-import type { Headers } from './event.ts';
+import type { Headers } from './event';
 
 export const DEFAULT_MASK_HEADERS = new Set([
   'authorization',

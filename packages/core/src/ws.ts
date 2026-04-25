@@ -1,4 +1,4 @@
-import type { Provider, Usage } from './event.ts';
+import type { Provider, Usage } from './event';
 
 export interface WsFrame {
   direction: 'client' | 'server';
