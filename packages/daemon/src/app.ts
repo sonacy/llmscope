@@ -12,6 +12,7 @@ import { statsRoute } from './routes/stats';
 import { StatsRepo } from './db/stats-repo';
 import { replayRoute } from './routes/replay';
 import { ReplaysRepo } from './db/replays-repo';
+import { sourcesRoute } from './routes/sources';
 import type { Broadcaster } from './broadcaster';
 import { StubBroadcaster } from './broadcaster';
 
@@ -73,6 +74,8 @@ export function createApp(deps: AppDeps): Hono {
       fetchImpl: deps.fetchImpl,
     }),
   );
+
+  app.route('/api/sources', sourcesRoute({ db: deps.db, events, sources, broadcaster }));
 
   app.notFound((c) => c.json({ error: 'not found' }, 404));
 

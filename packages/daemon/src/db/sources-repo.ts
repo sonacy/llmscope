@@ -48,4 +48,12 @@ export class SourcesRepo {
         .get(id) ?? null
     );
   }
+
+  splitByOrigin(): { builtin: FingerprintRow[]; user: FingerprintRow[] } {
+    const all = this.loadAll();
+    return {
+      builtin: all.filter((r) => !r.user_defined),
+      user: all.filter((r) => r.user_defined),
+    };
+  }
 }
