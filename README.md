@@ -24,7 +24,12 @@ bun packages/cli/src/index.ts install whistle      # or: install mitmproxy
 bun packages/cli/src/index.ts open
 ```
 
-See [`docs/quickstart.md`](docs/quickstart.md) for full step-by-step.
+See [`docs/quickstart.md`](docs/quickstart.md) for the short path. For
+**whistle-client** (the desktop GUI version of whistle) and capturing
+**Node-based clients like Claude Code / Cursor / Codex**, see the
+detailed walkthrough in [`docs/whistle-testing.md`](docs/whistle-testing.md)
+— there are several non-obvious gotchas (like Node's `fetch()` ignoring
+`HTTPS_PROXY` by default) that this doc covers exhaustively.
 
 ## What you get
 
