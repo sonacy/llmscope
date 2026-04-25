@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { MASK_TOKEN } from '@llmscope/core';
+import { MASK_TOKEN, detectProvider } from '@llmscope/core';
 import type { EventsRepo, EventRow } from '../db/events-repo';
 import type { SourcesRepo } from '../db/sources-repo';
 import type { ReplaysRepo } from '../db/replays-repo';
@@ -17,12 +17,33 @@ export interface ReplayDeps {
 
 const STRIPPED_HEADERS = new Set(['content-length', 'host', 'transfer-encoding', 'connection']);
 
+// Replay safety check: refuse to fetch any URL that isn't (a) http(s) AND
+// (b) recognized as a real LLM provider host. Without this, a stored
+// `parent.url` could point at the daemon's own /api/* (loopback SSRF
+// using the daemon's bearer), `file://`, or any internal service.
+function isReplayableUrl(rawUrl: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(rawUrl);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+  // Must match a known provider per @llmscope/core's host registry. If the
+  // captured event was attributed to provider `unknown`, refuse — replay is
+  // only safe against vetted LLM API hosts.
+  return detectProvider(rawUrl) !== 'unknown';
+}
+
 export function replayRoute(deps: ReplayDeps): Hono {
   const r = new Hono();
   r.post('/:id/replay', async (c) => {
     const parent = deps.events.getById(c.req.param('id'));
     if (!parent) return c.json({ error: 'not found' }, 404);
     if (parent.transport === 'ws') return c.json({ error: 'replay_not_supported_for_ws' }, 501);
+    if (!isReplayableUrl(parent.url)) {
+      return c.json({ error: 'replay_url_not_allowed', detail: 'replay only targets known LLM providers' }, 422);
+    }
 
     const headers = JSON.parse(parent.request_headers) as Record<string, string>;
     const authValue = headers['authorization'] ?? headers['Authorization'];

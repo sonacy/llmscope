@@ -75,4 +75,32 @@ describe('POST /api/events/:id/replay', () => {
     const r = await app.request('/api/events/evt_NOTEXIST/replay', { method: 'POST', headers: auth });
     expect(r.status).toBe(404);
   });
+
+  it('returns 422 for non-LLM-provider URLs (SSRF guard)', async () => {
+    let called = false;
+    const fakeFetch: typeof fetch = async () => {
+      called = true;
+      return new Response('{}');
+    };
+    const { app, events, sources } = setup(fakeFetch);
+    const parent = processIngest({ events, sources, bodyCapBytes: 1024 * 1024 }, {
+      ...baseEvent(),
+      url: 'http://127.0.0.1:47821/api/events',
+    });
+    const r = await app.request(`/api/events/${parent.id}/replay`, { method: 'POST', headers: auth });
+    expect(r.status).toBe(422);
+    expect(called).toBe(false);
+    const j = (await r.json()) as { error: string };
+    expect(j.error).toBe('replay_url_not_allowed');
+  });
+
+  it('returns 422 for non-http schemes', async () => {
+    const { app, events, sources } = setup(async () => new Response('{}'));
+    const parent = processIngest({ events, sources, bodyCapBytes: 1024 * 1024 }, {
+      ...baseEvent(),
+      url: 'file:///etc/passwd',
+    });
+    const r = await app.request(`/api/events/${parent.id}/replay`, { method: 'POST', headers: auth });
+    expect(r.status).toBe(422);
+  });
 });

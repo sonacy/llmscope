@@ -47,10 +47,32 @@ export function evictOldestUntilUnderCap(deps: EvictionDeps): { evicted: number 
   return { evicted };
 }
 
+// Backoff cap: if VACUUM keeps failing to reclaim file pages (a known
+// bun:sqlite + FTS5 quirk on some platforms), don't retry forever.
+const NOOP_VACUUM_MAX = 3;
+
 export function startEvictionTicker(deps: EvictionDeps, intervalMs = 5 * 60 * 1000): { stop: () => void } {
+  let consecutiveNoops = 0;
+  let backedOff = false;
   const handle = setInterval(() => {
-    if (dbSizeBytes(deps.dbPath) > deps.capBytes) {
-      evictOldestUntilUnderCap(deps);
+    if (backedOff) return;
+    const before = dbSizeBytes(deps.dbPath);
+    if (before <= deps.capBytes) {
+      consecutiveNoops = 0;
+      return;
+    }
+    evictOldestUntilUnderCap(deps);
+    const after = dbSizeBytes(deps.dbPath);
+    if (after >= before) {
+      consecutiveNoops++;
+      if (consecutiveNoops >= NOOP_VACUUM_MAX) {
+        deps.log?.(
+          `llmscope: eviction ticker backing off after ${NOOP_VACUUM_MAX} consecutive no-op VACUUMs (DB at ${after} bytes, cap ${deps.capBytes}); restart daemon to retry`,
+        );
+        backedOff = true;
+      }
+    } else {
+      consecutiveNoops = 0;
     }
   }, intervalMs);
   return { stop: () => clearInterval(handle) };

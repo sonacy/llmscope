@@ -239,6 +239,7 @@ class IngestClient:
         self._token = self._read_token()
         self._buffer: deque[dict[str, Any]] = deque(maxlen=1000)
         self._lock = threading.Lock()
+        self._stopping = False
         self._worker = threading.Thread(target=self._drain, daemon=True)
         self._worker.start()
 
@@ -255,7 +256,7 @@ class IngestClient:
             self._buffer.append(event)
 
     def _drain(self) -> None:
-        while True:
+        while not self._stopping:
             try:
                 event: dict[str, Any] | None
                 with self._lock:
@@ -267,6 +268,27 @@ class IngestClient:
             except Exception as e:  # never let the worker die
                 print(f"llmscope: ingest worker error: {e}", file=sys.stderr)
 
+    def flush(self, timeout_seconds: float = 5.0) -> int:
+        """Drain everything currently in the buffer synchronously. Called on
+        mitmproxy shutdown so we don't drop the last few events of a session.
+        Returns the count successfully posted."""
+        deadline = time.time() + timeout_seconds
+        posted = 0
+        while time.time() < deadline:
+            with self._lock:
+                event = self._buffer.popleft() if self._buffer else None
+            if event is None:
+                break
+            try:
+                self._post(event)
+                posted += 1
+            except Exception as e:
+                print(f"llmscope: flush post failed ({e})", file=sys.stderr)
+                break
+        # Stop the worker thread now that we've drained.
+        self._stopping = True
+        return posted
+
     def _post(self, event: dict[str, Any]) -> None:
         body = json.dumps(event).encode("utf-8")
         req = urllib.request.Request(
@@ -277,7 +299,7 @@ class IngestClient:
             },
         )
         try:
-            with urllib.request.urlopen(req, timeout=2) as _:
+            with urllib.request.urlopen(req, timeout=2) as _:  # noqa: S310 (localhost only)
                 pass
         except Exception as e:
             print(f"llmscope: ingest POST failed ({e}); event dropped", file=sys.stderr)
@@ -290,6 +312,17 @@ class IngestClient:
 class LlmscopeAddon:
     def __init__(self) -> None:
         self.client = IngestClient()
+
+    def done(self) -> None:
+        # mitmproxy lifecycle hook: called when mitmdump is shutting down.
+        # Flush any events still in the ring buffer so the last few requests
+        # of a session don't get silently dropped with the daemon thread.
+        try:
+            posted = self.client.flush(timeout_seconds=5.0)
+            if posted:
+                print(f"llmscope: flushed {posted} events on shutdown", file=sys.stderr)
+        except Exception as e:
+            print(f"llmscope: shutdown flush failed: {e}", file=sys.stderr)
 
     def request(self, flow) -> None:  # type: ignore[no-untyped-def]
         # Snapshot start time on the flow for later use.

@@ -98,4 +98,17 @@ describe('EventsRepo', () => {
     expect(repo.count()).toBe(2);
     expect(repo.countSince(t - 1000)).toBe(1);
   });
+
+  it('FTS search tolerates special characters that would otherwise crash MATCH', () => {
+    const repo = setup();
+    repo.insert(makeEvent({ request_body: 'about hummingbirds' }));
+    // None of these should throw — the escape wraps as a phrase.
+    expect(() => repo.list({ q: '*' })).not.toThrow();
+    expect(() => repo.list({ q: '"trailing-quote' })).not.toThrow();
+    expect(() => repo.list({ q: 'open(paren' })).not.toThrow();
+    expect(() => repo.list({ q: 'colon:in:query' })).not.toThrow();
+    // And a real query still finds the row.
+    expect(repo.list({ q: 'hummingbirds' }).rows.length).toBe(1);
+    expect(repo.list({ q: 'hummingbird*' }).rows.length).toBe(1);
+  });
 });

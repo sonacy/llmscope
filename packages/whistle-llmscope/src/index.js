@@ -12,6 +12,7 @@ const path = require('node:path');
 const os = require('node:os');
 const http = require('node:http');
 const https = require('node:https');
+const { PassThrough } = require('node:stream');
 const { shouldCapture, buildEvent } = require('./capture');
 const { postEvent } = require('./post');
 
@@ -126,10 +127,15 @@ module.exports.server = function (httpServer /*, options */) {
     const isHttps = parsedUrl.protocol === 'https:';
     const lib = isHttps ? https : http;
 
-    // Buffer request body for capture.
+    // Tee request through a PassThrough so the upstream pipe and the capture
+    // buffer don't race on flowing-mode chunks. Attaching `'data'` directly
+    // to `clientReq` flips it to flowing mode and the subsequent `pipe()`
+    // can lose chunks consumed before the pipe is wired.
+    const reqTee = new PassThrough();
+    clientReq.pipe(reqTee);
     const reqChunks = [];
     let reqBytes = 0;
-    clientReq.on('data', (chunk) => {
+    reqTee.on('data', (chunk) => {
       if (reqBytes < MAX_BUFFER_BYTES) {
         reqChunks.push(chunk);
         reqBytes += chunk.length;
@@ -234,7 +240,9 @@ module.exports.server = function (httpServer /*, options */) {
       }
     });
 
-    clientReq.pipe(upstreamReq);
+    // Pipe the *tee* to upstream (not clientReq directly) so both consumers
+    // see every chunk in order.
+    reqTee.pipe(upstreamReq);
   });
 };
 

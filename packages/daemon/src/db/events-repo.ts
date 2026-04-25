@@ -64,6 +64,18 @@ const COLUMNS: readonly (keyof EventRow)[] = [
 const PLACEHOLDERS = COLUMNS.map(() => '?').join(', ');
 const COLUMN_LIST = COLUMNS.join(', ');
 
+// FTS5 MATCH expression escaping. Wraps the user query as a phrase so
+// special chars (`"`, `*`, `(`, `)`, `:`) don't get interpreted as syntax.
+// Preserves a trailing `*` to keep prefix-search ergonomics.
+export function escapeFtsQuery(q: string): string {
+  const trimmed = q.trim();
+  if (!trimmed) return '';
+  const prefix = trimmed.endsWith('*');
+  const core = prefix ? trimmed.slice(0, -1) : trimmed;
+  const escaped = core.replace(/"/g, '""');
+  return prefix ? `"${escaped}"*` : `"${escaped}"`;
+}
+
 export interface ListFilters {
   source?: string;
   provider?: string;
@@ -125,8 +137,12 @@ export class EventsRepo {
       params.push(f.cursor);
     }
     if (f.q) {
+      // FTS5 MATCH treats `"`, `*`, `(`, `)`, `:` as syntax. To accept arbitrary
+      // user input safely, wrap the query in double quotes (FTS5 phrase mode)
+      // and escape internal `"` by doubling. Preserve a trailing `*` if the
+      // user asked for a prefix match.
       where.push('rowid IN (SELECT rowid FROM events_fts WHERE events_fts MATCH ?)');
-      params.push(f.q);
+      params.push(escapeFtsQuery(f.q));
     }
     const limit = Math.min(Math.max(f.limit ?? 50, 1), 500);
     const sql = `SELECT ${COLUMN_LIST}, created_at FROM events ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY id DESC LIMIT ?`;
