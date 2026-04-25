@@ -1,31 +1,32 @@
-import { mkdirSync, writeFileSync, chmodSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, copyFileSync, chmodSync, existsSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { loadPaths } from '../paths';
 
-const STUB_ADDON_PY = `#!/usr/bin/env python3
-# llmscope mitmproxy addon (STUB — full implementation lands in step 38)
-# Running this against mitmdump captures nothing yet; this is a placeholder so
-# users following the quickstart get a clear error rather than silent no-op.
-import sys
-print("llmscope mitmproxy addon stub — full implementation lands in step 38",
-      file=sys.stderr)
-sys.exit(2)
-`;
+function sourceAddonPath(): string {
+  if (process.env.LLMSCOPE_MITMPROXY_ADDON) return process.env.LLMSCOPE_MITMPROXY_ADDON;
+  const here = dirname(fileURLToPath(import.meta.url));
+  return join(here, '..', '..', '..', 'llmscope-mitmproxy', 'addon.py');
+}
 
 export function installMitmproxy(): { path: string; instructions: string[] } {
   const paths = loadPaths();
   mkdirSync(paths.homeDir, { recursive: true });
   const dest = join(paths.homeDir, 'mitmproxy_addon.py');
-  writeFileSync(dest, STUB_ADDON_PY);
+  const src = sourceAddonPath();
+  if (!existsSync(src)) {
+    throw new Error(`mitmproxy addon source not found at ${src} (set LLMSCOPE_MITMPROXY_ADDON to override)`);
+  }
+  copyFileSync(src, dest);
   try {
     chmodSync(dest, 0o755);
   } catch {
     /* */
   }
   const instructions = [
-    `Installed addon stub to: ${dest}`,
+    `Installed addon to: ${dest}`,
     `Run: mitmdump -s ${dest}`,
-    `Note: this is a STUB. Real capture lands in step 38.`,
+    `Set LLMSCOPE_TOKEN env var to the daemon's token (or use the file at ~/.llmscope/token).`,
   ];
   for (const line of instructions) console.log(line);
   return { path: dest, instructions };

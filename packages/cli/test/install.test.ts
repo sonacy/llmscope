@@ -21,15 +21,16 @@ describe('installWhistle', () => {
 });
 
 describe('installMitmproxy', () => {
-  it('writes a stub addon.py with deferred-impl warning', () => {
+  it('copies the real addon.py with mitmproxy hooks', () => {
     const dir = mkdtempSync(join(tmpdir(), 'llmscope-cli-im-'));
     process.env.LLMSCOPE_HOME = dir;
     const r = installMitmproxy();
     expect(r.path).toBe(join(dir, 'mitmproxy_addon.py'));
     const content = readFileSync(r.path, 'utf8');
     expect(content).toContain('#!/usr/bin/env python3');
-    expect(content).toContain('STUB');
-    expect(content).toContain('step 38');
+    expect(content).toContain('class LlmscopeAddon');
+    expect(content).toContain('def response(self, flow)');
+    expect(content).toContain('def websocket_message(self, flow)');
     delete process.env.LLMSCOPE_HOME;
   });
 });
