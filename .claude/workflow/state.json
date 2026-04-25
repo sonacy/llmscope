@@ -7,7 +7,7 @@
   "phase": "implement",
   "plan_dir": ".claude/plans/2026-04-24-llmscope",
   "created_at": "2026-04-25T04:31:28Z",
-  "updated_at": "2026-04-25T05:20:45Z",
+  "updated_at": "2026-04-25T05:36:17Z",
   "plan_commit": "53b49bfb9d556370f3020fcd40b981fcbdc32dce",
   "steps": [
     {
@@ -241,74 +241,74 @@
     {
       "id": 39,
       "name": "`ui` \u2014 Vite + React + Tailwind + shadcn scaffold; daemon serves `dist/`",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "0616313"
     },
     {
       "id": 40,
       "name": "`ui` \u2014 list view (TanStack Table + filters + pagination)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "287c3ec"
     },
     {
       "id": 41,
       "name": "`ui` \u2014 detail view (request/response/headers/timeline)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "287c3ec"
     },
     {
       "id": 42,
       "name": "`ui` \u2014 charts on `/stats` (recharts)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "287c3ec"
     },
     {
       "id": 43,
       "name": "`ui` \u2014 replay button on detail view",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "287c3ec"
     },
     {
       "id": 44,
       "name": "`ui` \u2014 manual source re-tagging UI",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "287c3ec"
     },
     {
       "id": 45,
       "name": "`ui` \u2014 error pages, empty states, daemon-down banner",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "287c3ec"
     },
     {
       "id": 46,
       "name": "End-to-end smoke test (fixture \u2192 ingest \u2192 list shows it)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "335ebeb"
     },
     {
       "id": 47,
       "name": "README + quickstart docs",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "4683c17"
     },
     {
       "id": 48,
       "name": "CI (GitHub Actions)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "cb84874"
     },
     {
       "id": 49,
       "name": "Pre-1.0 polish \u2014 body-cap E2E, daemon crash recovery, perf check, invariant tests",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "cb19bd2"
     },
     {
       "id": 50,
       "name": "Release & publish flow",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "efd842b"
     }
   ],
   "debug_log": []
