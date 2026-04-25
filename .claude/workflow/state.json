@@ -4,10 +4,10 @@
   "slug": "llmscope",
   "branch": "feat/llmscope",
   "branch_type": "feat",
-  "phase": "implement",
+  "phase": "debug",
   "plan_dir": ".claude/plans/2026-04-24-llmscope",
   "created_at": "2026-04-25T04:31:28Z",
-  "updated_at": "2026-04-25T05:36:17Z",
+  "updated_at": "2026-04-25T06:51:50Z",
   "plan_commit": "53b49bfb9d556370f3020fcd40b981fcbdc32dce",
   "steps": [
     {
@@ -311,5 +311,12 @@
       "commit": "efd842b"
     }
   ],
-  "debug_log": []
+  "debug_log": [
+    {
+      "description": "whistle-client testing process is too complex and undocumented; users repeat the same diagnostic loop on every fresh setup",
+      "root_cause": "no end-to-end testing guide for the whistle-client + lack + plugin + CA + Node-env-vars chain (8 distinct setup steps with non-obvious failure modes)",
+      "commit": "b1d251b",
+      "fixed_at": "2026-04-25T06:51:50Z"
+    }
+  ]
 }
