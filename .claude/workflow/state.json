@@ -4,77 +4,77 @@
   "slug": "llmscope",
   "branch": "feat/llmscope",
   "branch_type": "feat",
-  "phase": "plan-complete",
+  "phase": "implement",
   "plan_dir": ".claude/plans/2026-04-24-llmscope",
   "created_at": "2026-04-25T04:31:28Z",
-  "updated_at": "2026-04-25T04:31:28Z",
+  "updated_at": "2026-04-25T04:42:19Z",
   "plan_commit": "53b49bfb9d556370f3020fcd40b981fcbdc32dce",
   "steps": [
     {
       "id": 1,
       "name": "Repo + Bun workspace skeleton",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "aa3495a"
     },
     {
       "id": 2,
       "name": "`core` \u2014 IngestEvent Zod schema + types",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "ea2fe88"
     },
     {
       "id": 3,
       "name": "`core` \u2014 ULID helper",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "7eb3920"
     },
     {
       "id": 4,
       "name": "`core` \u2014 header masking helpers",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "47052c1"
     },
     {
       "id": 5,
       "name": "`core` \u2014 pricing JSON snapshot + lookup",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "4a202bc"
     },
     {
       "id": 6,
       "name": "`core` \u2014 provider registry + host detection",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "ab191ec"
     },
     {
       "id": 7,
       "name": "`core` \u2014 built-in fingerprint table + attribution engine",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "ea25a5e"
     },
     {
       "id": 8,
       "name": "`core` \u2014 SSE reassembly (OpenAI + Anthropic + Gemini)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "6843b1a"
     },
     {
       "id": 9,
       "name": "`core` \u2014 WS reassembly (OpenAI Realtime)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "8aec143"
     },
     {
       "id": 10,
       "name": "`core` \u2014 body cap + truncation helper",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "9d1dd0b"
     },
     {
       "id": 11,
       "name": "`core` \u2014 package build + barrel exports",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "22ccc5e"
     },
     {
       "id": 12,

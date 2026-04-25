@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "@llmscope/core": "workspace:*",
-    "hono": "^4.6.0"
+    "hono": "^4.12.15"
   }
 }
