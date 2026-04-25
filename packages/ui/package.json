@@ -1,0 +1,15 @@
+{
+  "name": "@llmscope/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'ui build placeholder — wired up in step 39'",
+    "dev": "echo 'ui dev placeholder — wired up in step 39'",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@llmscope/core": "workspace:*"
+  }
+}

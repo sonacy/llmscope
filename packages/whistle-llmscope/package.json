@@ -1,0 +1,10 @@
+{
+  "name": "whistle.llmscope",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.js",
+  "scripts": {
+    "typecheck": "echo 'whistle plugin is JS — no typecheck'",
+    "test": "bun test"
+  }
+}

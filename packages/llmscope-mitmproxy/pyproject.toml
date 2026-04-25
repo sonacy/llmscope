@@ -1,0 +1,9 @@
+[project]
+name = "llmscope-mitmproxy"
+version = "0.0.0"
+description = "llmscope mitmproxy addon"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
