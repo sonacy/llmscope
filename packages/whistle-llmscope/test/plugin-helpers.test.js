@@ -4,12 +4,6 @@ const { describe, it, expect } = require('bun:test');
 const mod = require('../src/index');
 
 describe('whistle plugin helpers', () => {
-  it('isHook matches res-stats prefix regardless of whistle uid suffix', () => {
-    expect(mod._isHook({ 'x-whistle-plugin-hook-name_': 'res-stats-19dc321da962d082034' }, 'res-stats')).toBe(true);
-    expect(mod._isHook({ 'x-whistle-plugin-hook-name_': 'req-stats-19dc321da962d082034' }, 'res-stats')).toBe(false);
-    expect(mod._isHook({}, 'res-stats')).toBe(false);
-  });
-
   it('reconstructUrl assembles host + path with https when whistle flag is set', () => {
     const req = {
       url: '/v1/chat/completions',
@@ -23,21 +17,33 @@ describe('whistle plugin helpers', () => {
     expect(mod._reconstructUrl(req)).toBe('http://example.com/foo');
   });
 
-  it('publicHeaders strips internal x-whistle-* and the hook header', () => {
-    const out = mod._publicHeaders({
+  it('reconstructUrl returns null when host header is missing', () => {
+    expect(mod._reconstructUrl({ url: '/x', headers: {} })).toBeNull();
+  });
+
+  it('outboundHeaders strips host/connection/content-length and all x-whistle-*', () => {
+    const out = mod._outboundHeaders({
       'content-type': 'application/json',
       'user-agent': 'OpenAI/Codex-CLI 1.0',
-      'x-whistle-plugin-hook-name_': 'res-stats-uid',
+      host: 'api.openai.com',
+      connection: 'keep-alive',
+      'content-length': '123',
+      'x-whistle-plugin-hook-name_': 'foo',
       'x-whistle-client-id': 'abc',
       'x-whistle-https-request': '1',
     });
     expect(out['content-type']).toBe('application/json');
     expect(out['user-agent']).toBe('OpenAI/Codex-CLI 1.0');
+    expect(out.host).toBeUndefined();
+    expect(out.connection).toBeUndefined();
+    expect(out['content-length']).toBeUndefined();
     expect(out['x-whistle-plugin-hook-name_']).toBeUndefined();
     expect(out['x-whistle-client-id']).toBeUndefined();
+    expect(out['x-whistle-https-request']).toBeUndefined();
   });
 
-  it('exposes statsServer and uiServer as functions', () => {
+  it('exposes server, statsServer, and uiServer as functions', () => {
+    expect(typeof mod.server).toBe('function');
     expect(typeof mod.statsServer).toBe('function');
     expect(typeof mod.uiServer).toBe('function');
   });
