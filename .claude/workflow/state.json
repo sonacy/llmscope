@@ -7,7 +7,7 @@
   "phase": "implement",
   "plan_dir": ".claude/plans/2026-04-24-llmscope",
   "created_at": "2026-04-25T04:31:28Z",
-  "updated_at": "2026-04-25T04:42:19Z",
+  "updated_at": "2026-04-25T04:50:26Z",
   "plan_commit": "53b49bfb9d556370f3020fcd40b981fcbdc32dce",
   "steps": [
     {
@@ -79,44 +79,44 @@
     {
       "id": 12,
       "name": "`daemon` \u2014 Hono skeleton, 127.0.0.1 bind, health endpoint",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "5e1751d"
     },
     {
       "id": 13,
       "name": "`daemon` \u2014 bearer token generation + auth middleware",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "3a5838b"
     },
     {
       "id": 14,
       "name": "`daemon` \u2014 SQLite migrations runner + schema 0001",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "888acb4"
     },
     {
       "id": 15,
       "name": "`daemon` \u2014 event repository (insert + read + filters)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "5c2601b"
     },
     {
       "id": 16,
       "name": "`daemon` \u2014 ingest pipeline (without route): derive + persist",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "bbf05e3"
     },
     {
       "id": 17,
       "name": "`daemon` \u2014 POST /api/ingest route + stub broadcaster",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "42a8f7f"
     },
     {
       "id": 18,
       "name": "`whistle-llmscope` \u2014 minimal viable plugin (HTTP only)",
-      "status": "pending",
-      "commit": null
+      "status": "done",
+      "commit": "160ff87"
     },
     {
       "id": 19,
